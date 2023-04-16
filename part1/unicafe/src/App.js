@@ -6,15 +6,26 @@ const Btn = (props) => {
 */
 
 const Statistics = ({good, neutral, bad}) => {
+  let total = good + neutral + bad
+
+  if (total == 0) {
+    return (
+      <>
+        <h1>statistics</h1>
+        No feedback given
+      </>
+    )
+  }
+
   return (
     <>
       <h1>statistics</h1>
       <p>good {good}</p>
       <p>neutral {neutral}</p>
       <p>bad {bad}</p>
-      <p>all {good + neutral + bad}</p>
-      <p>average {(good + neutral * 0 + bad * (-1)) / (good + neutral + bad)}</p>
-      <p>positive {good / (good + neutral + bad) * 100} %</p>
+      <p>all {total}</p>
+      <p>average {(good + neutral * 0 + bad * (-1)) / total}</p>
+      <p>positive {good / total * 100} %</p>
     </>
   )
 }
