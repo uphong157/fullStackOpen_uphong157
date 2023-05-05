@@ -23,6 +23,7 @@ const App = () => {
       number: newNumber,
     }
 
+    axios.post('http://localhost:3001/persons', newPerson)
     setPersons(persons.concat(newPerson))
     setNewName('')
     setNewNumber('')
