@@ -33,6 +33,15 @@ const App = () => {
       })
   }
 
+  const deletePerson = (personToDelete) => {
+    window.confirm(`Delete ${personToDelete.name} ?`)
+    personService
+      .deleteById(personToDelete.id)
+      .then(() => {
+        setPersons(persons.filter(p => p.id !== personToDelete.id))
+      })
+  }
+
   useEffect(() => {
     personService
       .getAll()
@@ -56,10 +65,13 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <PersonsList persons={persons.filter((person) => {
-        if (filter === '') return true
-        else return person.name.toLowerCase().includes(filter.toLowerCase())
-      })}/>
+      <PersonsList 
+        persons={persons.filter((person) => {
+          if (filter === '') return true
+          else return person.name.toLowerCase().includes(filter.toLowerCase())
+        })} 
+        handlePersonDelete={deletePerson}
+      />
     </div>
   )
 }

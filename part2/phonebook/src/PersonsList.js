@@ -1,9 +1,10 @@
-const PersonsList = ({persons}) => {
+const PersonsList = ({persons, handlePersonDelete}) => {
   return (
     <>
       {persons.map(person => 
-        <p key={person.name}>
+        <p key={person.id}>
           {person.name} {person.number}
+          <button onClick={() => handlePersonDelete(person)}>delete</button>
         </p>
       )}
     </>
