@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Filter from './Filter'
 import PersonForm from './PersonForm'
 import PersonsList from './PersonsList'
+import Notification from './Notification'
 
 import personService from './services/persons'
 
@@ -10,6 +11,7 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [errorMsg, setErrorMsg] = useState(null)
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -26,6 +28,10 @@ const App = () => {
           setPersons(persons.map(p => p.id !== duplicatePerson.id ? p : returnedPerson))
           setNewName('')
           setNewNumber('')
+          setErrorMsg(`Updated ${newName}`)
+          setTimeout(() => {
+            setErrorMsg(null)
+          }, 5000)
         })
     }
 
@@ -40,6 +46,10 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        setErrorMsg(`Added ${newName}`)
+        setTimeout(() => {
+          setErrorMsg(null)
+        }, 5000)
       })
   }
 
@@ -63,6 +73,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMsg} />
       <Filter filter={filter} handleChange={e => setFilter(e.target.value)}/>
 
       <h3>add a new</h3>
