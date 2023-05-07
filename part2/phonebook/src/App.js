@@ -11,16 +11,17 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [errorMsg, setErrorMsg] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [isErrorMsg, setIsErrorMsg] = useState(false)
 
   const addPerson = (event) => {
     event.preventDefault()
 
     const duplicatePerson = persons.find(person => person.name === newName)
     if (duplicatePerson) {
-      if (!window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        return
-      }
+      if (!window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      )) return
 
       return personService
         .update(duplicatePerson.id, { ...duplicatePerson, number: newNumber})
@@ -28,10 +29,21 @@ const App = () => {
           setPersons(persons.map(p => p.id !== duplicatePerson.id ? p : returnedPerson))
           setNewName('')
           setNewNumber('')
-          setErrorMsg(`Updated ${newName}`)
+          setMessage(`Updated ${newName}`)
+          setIsErrorMsg(false)
           setTimeout(() => {
-            setErrorMsg(null)
+            setMessage(null)
+            setIsErrorMsg(false)
           }, 5000)
+        })
+        .catch(error => {
+          setMessage(`Information of ${newName} has already been removed from server`)
+          setIsErrorMsg(true)
+          setTimeout(() => {
+            setMessage(null)
+            setIsErrorMsg(false)
+          }, 5000)
+          setPersons(persons.filter(p => p.id !== duplicatePerson.id))
         })
     }
 
@@ -46,9 +58,11 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
-        setErrorMsg(`Added ${newName}`)
+        setMessage(`Added ${newName}`)
+        setIsErrorMsg(false)
         setTimeout(() => {
-          setErrorMsg(null)
+          setMessage(null)
+          setIsErrorMsg(false)
         }, 5000)
       })
   }
@@ -73,7 +87,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={errorMsg} />
+      <Notification message={message} isErrorMsg={isErrorMsg} />
       <Filter filter={filter} handleChange={e => setFilter(e.target.value)}/>
 
       <h3>add a new</h3>
